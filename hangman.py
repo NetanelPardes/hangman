@@ -98,7 +98,7 @@ def number_guesses_over(guessing_balance,secret_word):
 #Checks if the user was able to guess the word
 def successful_word_guessing(hidden_word ,secret_word):
     if hidden_word == secret_word:
-        print(f"🏆 you win, good job! \nthe word are: {secret_word}")
+        print(f"🏆 you win, good job! \nthe word are: {secret_word}\n")
     else:
         print("✅ Good job, keep it up\n.")
 
