@@ -1,3 +1,5 @@
+#https://github.com/NetanelPardes/hangman
+
 import random
 
 WORDS = [
@@ -45,7 +47,7 @@ WORDS = [
     "loop", "condition", "string", "list", "index",
     "error", "program", "project", "folder", "file"
 ]
-MAX_TRY = 5
+MAX_TRY = 10
 
 #get a random word from a list
 def choose_random_word(word_list):
@@ -57,7 +59,8 @@ def hiding_word(secret_word):
 
 #Prints the player's state in the game.
 def printing_mode(hiding_word, guessing_balance,used_characters):
-    print(f"Your successful guesses: {hiding_word} \nYou have {guessing_balance} guesses left. \nThe characters you used: {used_characters}")
+    print(f"Your successful guesses: {hiding_word} \nYou have {guessing_balance} guesses left.\
+          \nThe characters you used: {used_characters}")
 
 #Checks that the player typed a single letter and not something else
 def letter_check(letter):
@@ -70,6 +73,7 @@ def letter_already_exists(letter, letter_list):
 #Adding a letter to the guess list
 def adding_letter_to_list(user_letter , letter_list):
     letter_list.append(user_letter)
+    letter_list.sort()
     return letter_list
 
 #Checks if the letter in the word is mysterious
@@ -84,17 +88,23 @@ def change_hidden_word(letter, my_hidden_word ,secret_word):
             my_hidden_word[index] = letter
     return "".join(my_hidden_word)
 
-def number_guesses_over():
-    print("game over")
+#Checks if the user has used all of their attempts
+def number_guesses_over(guessing_balance,secret_word):
+    if guessing_balance == 0:
+        print(f"🫷 game over \nteh secret word was {secret_word}")
+    else:
+        print("❌ Wrong guess\n")
 
+#Checks if the user was able to guess the word
 def successful_word_guessing(hidden_word ,secret_word):
     if hidden_word == secret_word:
-        print("you win, good job!")
+        print(f"🏆 you win, good job! \nthe word are: {secret_word}")
+    else:
+        print("✅ Good job, keep it up\n.")
 
 #The game itself
 def start_game():
     my_secret_word = choose_random_word(WORDS)
-    print(my_secret_word)
     my_hiding_word = hiding_word(my_secret_word)
     guessing_balance = MAX_TRY
     used_characters = []
@@ -104,24 +114,21 @@ def start_game():
         user_letter = input("What letter do you want to guess? ").lower()
 
         if not letter_check(user_letter):
+            print("❌ Error, typing an incorrect character\n")
             continue
 
         elif letter_already_exists(user_letter,used_characters):
+            print("❌ You have already typed this letter\n")
             continue
         
         used_characters = adding_letter_to_list(user_letter,used_characters)
 
         if not successful_letter_guess(user_letter , my_secret_word):
-            print("Wrong guess")
             guessing_balance -= 1
-            if guessing_balance == 0:
-                number_guesses_over() 
+            number_guesses_over(guessing_balance,my_secret_word) 
         else:
             my_hiding_word = change_hidden_word(user_letter , my_hiding_word , my_secret_word)
             successful_word_guessing(my_hiding_word , my_secret_word)
-
-        
-
 
 def main():
     start_game()
